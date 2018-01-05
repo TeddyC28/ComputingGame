@@ -58,19 +58,23 @@ public class Screen {
 					pixels[x + y * width] = Sprite.rightDoorBottom.pixels[(x & (Sprite.leftDoorBottom.SIZE - 1)) + (y & (Sprite.leftDoorBottom.SIZE - 1)) * Sprite.leftDoorBottom.SIZE];
 }
 // edges
-				else if (tileCoordinate(x, y) % 32 == 0)
+				else if (tileCoordinate(x, y) % 32 == 0) {
 					pixels[x + y * width] = Sprite.wallEdge.pixels[(x & 15) + (y & 15) * Sprite.wallEdge.SIZE];
-				else if ((tileCoordinate(x, y) + 1) % 32 == 0)
+}
+				else if ((tileCoordinate(x, y) + 1) % 32 == 0) {
 					pixels[x + y * width] = Sprite.wallEdge.pixels[(x & 15) + (y & 15) * Sprite.wallEdge.SIZE];
-				else if (tileCoordinate(x, y) < ROOM_WIDTH)
+}
+				else if (tileCoordinate(x, y) < ROOM_WIDTH) {
 					pixels[x + y * width] = Sprite.wallEdge.pixels[(x & 15) + (y & 15) * Sprite.wallEdge.SIZE];
-				else if (tileCoordinate(x, y) > (ROOM_HEIGHT - 1) * ROOM_WIDTH)
+}
+				else if (tileCoordinate(x, y) > (ROOM_HEIGHT - 1) * ROOM_WIDTH) {
 					pixels[x + y * width] = Sprite.wallEdge.pixels[(x & 15) + (y & 15) * Sprite.wallEdge.SIZE];
-
+}
 // fill central area
-				else
+				else {
 					pixels[x + y * width] = Sprite.floor.pixels[(x & (Sprite.leftDoorTop.SIZE - 1))
 							+ (y & (Sprite.leftDoorTop.SIZE - 1)) * Sprite.leftDoorTop.SIZE];
+				}
 			}
 		}
 	}
