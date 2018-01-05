@@ -3,7 +3,9 @@ package com.teddyc28.game.entity.mob;
 import com.teddyc28.game.graphics.Sprite;
 
 public class Mob {
-	
+    
+    public int x, y;
+
 	protected Sprite sprite;
 	protected int dir = 0;
 	protected boolean moving = false;
@@ -14,7 +16,12 @@ public class Mob {
 			move(xa, 0);
 			move(0, ya);
 			return;
-		}
+        }
+        
+        if (!collision()) {
+            x += xa;
+            y += ya;
+        }
 		
 		if (xa > 0) dir = 0;
 		if (xa < 0) dir = 2;
