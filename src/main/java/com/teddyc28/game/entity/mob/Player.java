@@ -8,7 +8,7 @@ public class Player extends Mob {
 		
 	private Keyboard input;
 	private Sprite sprite;
-	private boolean walking = false;
+	//private boolean walking = false;
 	
 	public Player(Keyboard input, Sprite sprite) {
 		this.input = input;
