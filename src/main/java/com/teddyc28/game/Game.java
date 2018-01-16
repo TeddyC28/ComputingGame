@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 
 import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
-import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.input.Keyboard;
 import com.teddyc28.game.level.room.Room;
 
@@ -35,7 +34,7 @@ public class Game extends Canvas implements Runnable {
 	
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-	 
+	
 	public Game() {
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
@@ -45,7 +44,7 @@ public class Game extends Canvas implements Runnable {
 		room = Room.spawnRoom;
 		frame = new JFrame();
 		key = new Keyboard();
-		player = new Player(key, Sprite.player);
+		player = new Player(key);
 		
 		addKeyListener(key);
 	}
@@ -146,4 +145,3 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 }
-

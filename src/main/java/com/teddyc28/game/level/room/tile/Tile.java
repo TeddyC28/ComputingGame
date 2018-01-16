@@ -2,15 +2,14 @@ package com.teddyc28.game.level.room.tile;
 
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.graphics.Sprite;
-//import com.teddyc28.game.level.room.tile.FloorTile;
+import com.teddyc28.game.level.room.tile.FloorTile;
 
 public class Tile 
 {
     public Sprite sprite;
 
-    public static Tile floor = new Tile(Sprite.floor);
-    public static Tile wallEdge = new Tile(Sprite.wallEdge);
-    public static Tile wallCorner = new Tile(Sprite.wallCorner);
+    public static Tile floor = new FloorTile(Sprite.floor);
+    public static Tile wallEdge = new WallEdgeTile(Sprite.wallEdge);
     public static Tile topDoorLeft = new Tile(Sprite.topDoorLeft);
     public static Tile topDoorRight = new Tile(Sprite.topDoorRight);
     public static Tile bottomDoorLeft = new Tile(Sprite.bottomDoorLeft);

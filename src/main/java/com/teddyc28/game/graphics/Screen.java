@@ -48,6 +48,7 @@ public class Screen {
 	public void renderPlayer(int xPos, int yPos, Sprite sprite) {
 		for (int y = 0; y < sprite.SIZE; y++) {
 			for (int x = 0; x < sprite.SIZE; x++) {
+				if ((x + xPos) < -32 || (x + xPos) >= width || (y + yPos) < 0 || (y + yPos) >= height) break;
 				if (sprite.pixels[x+y*sprite.SIZE] != 0xffff00ff) pixels[(xPos + x) + (yPos + y) * width] = sprite.pixels[x + y * sprite.SIZE];
 			}
 		}

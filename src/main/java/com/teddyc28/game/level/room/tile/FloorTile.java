@@ -5,7 +5,7 @@ import com.teddyc28.game.graphics.Sprite;
 
 public class FloorTile extends Tile
 {
-    public FloorTile(int x, int y, Sprite sprite) {
+    public FloorTile(Sprite sprite) {
         super(sprite);
     }
 

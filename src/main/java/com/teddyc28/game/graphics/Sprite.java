@@ -10,12 +10,30 @@ public class Sprite {
 	private SpriteSheet sheet;
 	private static Random random = new Random();
 
-	public static Sprite floor = new Sprite(16, random.nextInt(3), random.nextInt(3), SpriteSheet.floors);
-	public static Sprite wallEdge = new Sprite(16, random.nextInt(3), random.nextInt(3), SpriteSheet.walls);
-	public static Sprite wallCorner = new Sprite(16, random.nextInt(3), random.nextInt(3), SpriteSheet.walls);
-	
-	public static Sprite player = new Sprite(32, 2, 5, SpriteSheet.tiles);
+	public static Sprite floor = new Sprite(3, 3, SpriteSheet.floors);
+	public static Sprite wallEdge = new Sprite(3, 3, SpriteSheet.walls);
+	//public static Sprite wallCorner = new Sprite(16, 3, 3, SpriteSheet.walls);
 
+	//Player Non-moving Sprites
+	public static Sprite player_forward = new Sprite(32, 0, 5, SpriteSheet.tiles);
+	public static Sprite player_back = new Sprite(32, 2, 5, SpriteSheet.tiles);
+	public static Sprite player_left = new Sprite(32, 3, 5, SpriteSheet.tiles);
+	public static Sprite player_right = new Sprite(32, 1, 5, SpriteSheet.tiles);
+	
+	//Player Moving Animation Sprites
+	public static Sprite player_forward_1 = new Sprite(32, 0, 6, SpriteSheet.tiles);
+	public static Sprite player_forward_2 = new Sprite(32, 0, 7, SpriteSheet.tiles);
+	
+	public static Sprite player_back_1 = new Sprite(32, 2, 6, SpriteSheet.tiles);
+	public static Sprite player_back_2 = new Sprite(32, 2, 7, SpriteSheet.tiles);
+	
+	public static Sprite player_left_1 = new Sprite(32, 3, 6, SpriteSheet.tiles);
+	public static Sprite player_left_2 = new Sprite(32, 3, 7, SpriteSheet.tiles);
+	
+	public static Sprite player_right_1 = new Sprite(32, 1, 6, SpriteSheet.tiles);
+	public static Sprite player_right_2 = new Sprite(32, 1, 7, SpriteSheet.tiles);
+
+	//Door Sprites
 	public static Sprite topDoorLeft = new Sprite(16, 1, 0, SpriteSheet.doors);
 	public static Sprite topDoorRight = new Sprite(16, 2, 0, SpriteSheet.doors);
 	
@@ -28,6 +46,7 @@ public class Sprite {
 	public static Sprite rightDoorTop = new Sprite(16, 3, 0, SpriteSheet.doors);
 	public static Sprite rightDoorBottom = new Sprite(16, 3, 1, SpriteSheet.doors);
 
+	//Void Sprite
 	public static Sprite voidSprite = new Sprite(16, 0x1B87E0);
 	
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
@@ -35,6 +54,15 @@ public class Sprite {
 		pixels = new int[size * size];
 		this.x = x;
 		this.y = y;
+		this.sheet = sheet;
+		load();
+	}
+
+	public Sprite(int xMax, int yMax, SpriteSheet sheet) {
+		this.SIZE = 16;
+		pixels = new int[SIZE * SIZE];
+		this.x = random.nextInt(xMax);
+		this.y = random.nextInt(yMax);
 		this.sheet = sheet;
 		load();
 	}
