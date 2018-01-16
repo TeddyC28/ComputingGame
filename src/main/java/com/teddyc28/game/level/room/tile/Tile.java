@@ -2,6 +2,7 @@ package com.teddyc28.game.level.room.tile;
 
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.graphics.Sprite;
+//import com.teddyc28.game.level.room.tile.FloorTile;
 
 public class Tile 
 {
@@ -18,6 +19,7 @@ public class Tile
     public static Tile rightDoorBottom = new Tile(Sprite.rightDoorBottom);
     public static Tile leftDoorTop = new Tile(Sprite.leftDoorTop);
     public static Tile leftDoorBottom = new Tile(Sprite.leftDoorBottom);
+    public static Tile voidTile = new Tile(Sprite.voidSprite);
 
     
     

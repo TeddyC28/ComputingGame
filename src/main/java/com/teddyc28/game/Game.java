@@ -14,6 +14,7 @@ import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.input.Keyboard;
+import com.teddyc28.game.level.room.Room;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -21,15 +22,16 @@ public class Game extends Canvas implements Runnable {
 	private int width = 512;
 	private int height = 288;
 	private int scale = 3;
-	public static String title = "Test";
+	public static String title = "Game";
 	
 	private boolean running = false;
 	
-	private Thread thread;
+	private Thread gameThread;
 	private JFrame frame;
 	private Screen screen;
 	private Keyboard key;
 	private Player player;
+	private Room room;
 	
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -40,6 +42,7 @@ public class Game extends Canvas implements Runnable {
 
 		screen = new Screen(width, height);
 		
+		room = Room.spawnRoom;
 		frame = new JFrame();
 		key = new Keyboard();
 		player = new Player(key, Sprite.player);
@@ -57,14 +60,14 @@ public class Game extends Canvas implements Runnable {
 	
 	public void start() {
 		running = true;
-		thread = new Thread(this, "Display");
-		thread.start();
+		gameThread = new Thread(this, "Display");
+		gameThread.start();
 	}
 	
 	public void stop() {
 		running = false;
 		try {
-			thread.join();
+			gameThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -92,7 +95,7 @@ public class Game extends Canvas implements Runnable {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				System.out.println(updates + " ups, " + frames + " fps");
+				//System.out.println(updates + " ups, " + frames + " fps");
 				frame.setTitle(title + " | " + updates + " ups, " + frames + " fps");
 				updates = 0;
 				frames = 0;
@@ -114,7 +117,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		screen.clear();
-		screen.render();
+		room.render(screen);
 		player.render(screen);
 		
 		for (int i = 0; i < pixels.length; i++) {

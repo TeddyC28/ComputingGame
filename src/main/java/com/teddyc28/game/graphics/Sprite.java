@@ -27,6 +27,8 @@ public class Sprite {
 
 	public static Sprite rightDoorTop = new Sprite(16, 3, 0, SpriteSheet.doors);
 	public static Sprite rightDoorBottom = new Sprite(16, 3, 1, SpriteSheet.doors);
+
+	public static Sprite voidSprite = new Sprite(16, 0x1B87E0);
 	
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;
@@ -35,6 +37,19 @@ public class Sprite {
 		this.y = y;
 		this.sheet = sheet;
 		load();
+	}
+
+	public Sprite(int size, int colour) {
+		this.SIZE = size;
+		pixels = new int[SIZE * SIZE];
+		setColour(colour);
+	}
+
+	private void setColour(int colour) {
+		for (int i = 0; i < SIZE * SIZE; i++) {
+			pixels[i] = colour;
+		}
+
 	}
 
 	private void load() {
