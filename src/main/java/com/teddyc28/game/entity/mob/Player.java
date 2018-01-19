@@ -7,8 +7,7 @@ import com.teddyc28.game.input.Keyboard;
 public class Player extends Mob {
 		
 	private Keyboard input;
-	private Sprite sprite;
-	public int room;
+	//private Sprite sprite;
 	private int anim = 0;
 	private boolean walking = false;
 	
@@ -16,6 +15,8 @@ public class Player extends Mob {
 		this.input = input;
 		this.x = 200;
 		this.y = 200;
+		this.roomX = 10;
+		this.roomY = 10;
 	}
 	
 	public void update() {

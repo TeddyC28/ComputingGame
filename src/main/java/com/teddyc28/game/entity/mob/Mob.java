@@ -1,11 +1,14 @@
 package com.teddyc28.game.entity.mob;
 
 import com.teddyc28.game.graphics.Sprite;
-import com.teddyc28.game.level.room.Room;
+import com.teddyc28.game.level.Level;
 
 public class Mob {
     
-    public int x, y;
+	public int x, y;
+	public int roomX, roomY;
+
+	public Level level;
 
 	protected Sprite sprite;
 	protected int dir = 0;
@@ -23,6 +26,12 @@ public class Mob {
 		if (xa < 0) dir = 3;
 		if (ya > 0) dir = 2;
 		if (ya < 0) dir = 0;    
+
+		if (checkDoor(xa, ya) >= 0) {
+			System.out.println(level.getRoom(roomX, roomY).getTile(x / 16, y / 16).name);
+			roomChange(checkDoor(xa, ya));
+			return;
+		}
 
         if (!collision(xa, ya)) {
             x += xa;
@@ -49,10 +58,42 @@ public class Mob {
 		for (int c = 0; c < 4; c++) {
 			int xt = ((x + xa) + c % 2 * 10 - 7) / 16;
 			int yt = ((y + ya) + c / 2 * 15) / 16;
-			if (Room.spawnRoom.getTile(xt, yt).solid()) solid = true;
+			if (level.getRoom(roomX, roomY).getTile(xt, yt).solid()) solid = true;
 		}
 		return solid;
 	}
 	
+	private int checkDoor(int xa, int ya) {
+		for (int c = 0; c < 4; c++) {
+			int xt = ((x + xa) + c % 2 * 10 - 7) / 16;
+			int yt = ((y + ya) + c / 2 * 15) / 16;
+			if (level.getRoom(roomX, roomY).getTile(xt, yt).doorDirection() >= 0) return level.getRoom(roomX, roomY).getTile(xt, yt).doorDirection();
+		}
+		return -1;
+	}
+
+	private void roomChange(int dir) {
+		//System.out.println(dir);
+		if (roomY != 0 && dir ==0) { 
+			roomY--;
+			x = 256;
+			y = 256;
+		}
+		if (roomX != level.width && dir == 1) { 
+			roomX++;
+			x = 32;
+			y = 144;
+		}
+		if (roomY != level.height && dir == 2) {
+			roomY++;
+			x = 256;
+			y = 32;
+		}
+		if (roomX != 0 && dir ==3) { 
+			roomX--;
+			x = 480;
+			y = 144;
+		}
+	}
 
 }

@@ -6,5 +6,10 @@ public class LeftDoorTile extends Door {
 
     public LeftDoorTile(Sprite sprite) {
         super(sprite);
+        name = "ldt";
+    }
+
+    public int doorDirection() {
+        return 3;
     }
 }

@@ -13,6 +13,17 @@ public class Room {
     protected int[] tiles;
 
     public static Room spawnRoom = new Room("/textures/rooms/spawn_room.png");
+    
+    public static Room topLeftCornerRoom = new Room("/textures/rooms/top_left_room.png");
+    public static Room topRighttCornerRoom = new Room("/textures/rooms/top_right_room.png");
+    public static Room bottomLeftCornerRoom = new Room("/textures/rooms/bottom_left_room.png");
+    public static Room bottomRightCornerRoom = new Room("/textures/rooms/bottom_right_room.png");
+
+    public static Room leftEdgeRoom = new Room("/textures/rooms/left_edge_room.png");
+    public static Room rightEdgeRoom = new Room("/textures/rooms/right_edge_room.png");
+    public static Room topEdgeRoom = new Room("/textures/rooms/top_edge_room.png");
+    public static Room bottomEdgeRoom = new Room("/textures/rooms/bottom_edge_room.png");
+
     public static Room voidRoom = new Room();
 
     public Room(String path) {
@@ -38,10 +49,8 @@ public class Room {
         try {
             System.out.println(path);
             BufferedImage image = ImageIO.read(Room.class.getResource(path));
-            int w = image.getWidth();
-            int h = image.getHeight();
-            tiles = new int[w * h];
-            image.getRGB(0, 0, w, h, tiles, 0, w);
+            tiles = new int[image.getWidth() * image.getHeight()];
+            image.getRGB(0, 0, image.getWidth(), image.getHeight(), tiles, 0, image.getWidth());
         } catch (IOException e) {
             System.out.println("Failed to read room file");
             e.printStackTrace();
@@ -51,7 +60,7 @@ public class Room {
     public void render(Screen screen) {
         for (int y = 0; y < Screen.ROOM_HEIGHT; y++) {
             for (int x = 0; x < Screen.ROOM_WIDTH; x++) {
-                System.out.println(x + " : " + y);
+                //System.out.println(x + " : " + y);
                 screen.renderTile(x, y, getTile(x, y));
             }
         }

@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.input.Keyboard;
-import com.teddyc28.game.level.room.Room;
+import com.teddyc28.game.level.Level;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable {
 	private Screen screen;
 	private Keyboard key;
 	private Player player;
-	private Room room;
+	private Level level;
 	
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -40,11 +40,11 @@ public class Game extends Canvas implements Runnable {
 		setPreferredSize(size);
 
 		screen = new Screen(width, height);
-		
-		room = Room.spawnRoom;
+		level = Level.spawnLevel;
 		frame = new JFrame();
 		key = new Keyboard();
 		player = new Player(key);
+		player.level = level;
 		
 		addKeyListener(key);
 	}
@@ -57,13 +57,13 @@ public class Game extends Canvas implements Runnable {
 		return height * scale;
 	}
 	
-	public void start() {
+	private void start() {
 		running = true;
 		gameThread = new Thread(this, "Display");
 		gameThread.start();
 	}
 	
-	public void stop() {
+	private void stop() {
 		running = false;
 		try {
 			gameThread.join();
@@ -103,12 +103,12 @@ public class Game extends Canvas implements Runnable {
 		stop();
 	}
 	
-	public void update() {
+	private void update() {
 		key.update();
 		player.update();
 	}
 	
-	public void render() {
+	private void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
@@ -116,7 +116,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		screen.clear();
-		room.render(screen);
+		level.getRoom(player.roomX, player.roomY).render(screen);
 		player.render(screen);
 		
 		for (int i = 0; i < pixels.length; i++) {
