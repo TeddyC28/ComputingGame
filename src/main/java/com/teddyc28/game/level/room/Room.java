@@ -47,7 +47,6 @@ public class Room {
 
     protected void loadRoom(String path) {
         try {
-            System.out.println(path);
             BufferedImage image = ImageIO.read(Room.class.getResource(path));
             tiles = new int[image.getWidth() * image.getHeight()];
             image.getRGB(0, 0, image.getWidth(), image.getHeight(), tiles, 0, image.getWidth());
@@ -60,7 +59,6 @@ public class Room {
     public void render(Screen screen) {
         for (int y = 0; y < Screen.ROOM_HEIGHT; y++) {
             for (int x = 0; x < Screen.ROOM_WIDTH; x++) {
-                //System.out.println(x + " : " + y);
                 screen.renderTile(x, y, getTile(x, y));
             }
         }

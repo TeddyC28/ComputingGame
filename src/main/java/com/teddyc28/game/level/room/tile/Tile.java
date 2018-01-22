@@ -8,7 +8,6 @@ import com.teddyc28.game.level.room.tile.door_tiles.*;
 public class Tile 
 {
     public Sprite sprite;
-    public String name = "dwa";
 
     public static Tile floor = new FloorTile(Sprite.floor);
     public static Tile wallEdge = new WallEdgeTile(Sprite.wallEdge);

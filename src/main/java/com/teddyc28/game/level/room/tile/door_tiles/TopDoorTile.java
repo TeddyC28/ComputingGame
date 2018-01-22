@@ -6,7 +6,6 @@ public class TopDoorTile extends Door {
 
     public TopDoorTile(Sprite sprite) {
         super(sprite);
-        name = "tdt";
     }
 
     public int doorDirection() {

@@ -28,7 +28,6 @@ public class Mob {
 		if (ya < 0) dir = 0;    
 
 		if (checkDoor(xa, ya) >= 0) {
-			System.out.println(level.getRoom(roomX, roomY).getTile(x / 16, y / 16).name);
 			roomChange(checkDoor(xa, ya));
 			return;
 		}

@@ -3,6 +3,7 @@ package com.teddyc28.game;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -13,6 +14,7 @@ import javax.swing.JFrame;
 import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.input.Keyboard;
+import com.teddyc28.game.input.Mouse;
 import com.teddyc28.game.level.Level;
 
 public class Game extends Canvas implements Runnable {
@@ -29,6 +31,7 @@ public class Game extends Canvas implements Runnable {
 	private JFrame frame;
 	private Screen screen;
 	private Keyboard key;
+	//private Mouse mouse;
 	private Player player;
 	private Level level;
 	
@@ -46,7 +49,10 @@ public class Game extends Canvas implements Runnable {
 		player = new Player(key);
 		player.level = level;
 		
+		Mouse mouse = new Mouse();
 		addKeyListener(key);
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
 	}
 	
 	public int getWindowWidth() {
@@ -124,13 +130,16 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		Graphics g = bs.getDrawGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+		//g.setColor(Color.WHITE);
+		g.setFont(new Font("Verdana", 0, 50));
+		//g.fillRect(Mouse.getX() - 32, Mouse.getY() - 32, 64, 64);
+		if (Mouse.getButton() != -1) g.drawString("Button: " + Mouse.getButton(), 80, 80);
 		g.dispose();
 		bs.show();
 	}
 	
+
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.frame.setResizable(false);
