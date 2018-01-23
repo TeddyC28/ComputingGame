@@ -25,9 +25,6 @@ public class SpriteSheet {
 	}
 	
 	private void load() {
-		//System.out.println(SpriteSheet.class.getResource(path));
-		//System.out.println(path);
-		//System.out.println(SpriteSheet.class.getResource(path));
 		try {
 			BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
 			image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());

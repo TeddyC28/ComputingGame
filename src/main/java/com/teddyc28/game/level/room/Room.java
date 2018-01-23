@@ -27,6 +27,7 @@ public class Room {
     public static Room voidRoom = new Room();
 
     public Room(String path) {
+        tiles = new int[Screen.ROOM_WIDTH * Screen.ROOM_HEIGHT];
         loadRoom(path);
     }
 

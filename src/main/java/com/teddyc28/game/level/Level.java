@@ -38,7 +38,7 @@ public class Level {
             e.printStackTrace();
         }
     }
-//FF0800
+    
     public Room getRoom(int x, int y) {
         if (x < 0 || y < 0 || x >= width || y >= height) return Room.voidRoom;
         if (rooms[x + y * width] == 0xffFF0800) return Room.topLeftCornerRoom;

@@ -66,13 +66,14 @@ public class Mob {
 		for (int c = 0; c < 4; c++) {
 			int xt = ((x + xa) + c % 2 * 10 - 7) / 16;
 			int yt = ((y + ya) + c / 2 * 15) / 16;
-			if (level.getRoom(roomX, roomY).getTile(xt, yt).doorDirection() >= 0) return level.getRoom(roomX, roomY).getTile(xt, yt).doorDirection();
+			if (level.getRoom(roomX, roomY).getTile(xt, yt).doorDirection() >= 0) {
+				return level.getRoom(roomX, roomY).getTile(xt, yt).doorDirection();
+			}
 		}
 		return -1;
 	}
 
 	private void roomChange(int dir) {
-		//System.out.println(dir);
 		if (roomY != 0 && dir ==0) { 
 			roomY--;
 			x = 256;

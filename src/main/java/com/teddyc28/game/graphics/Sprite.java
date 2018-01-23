@@ -12,7 +12,6 @@ public class Sprite {
 
 	public static Sprite floor = new Sprite(3, 3, SpriteSheet.floors);
 	public static Sprite wallEdge = new Sprite(3, 3, SpriteSheet.walls);
-	//public static Sprite wallCorner = new Sprite(16, 3, 3, SpriteSheet.walls);
 
 	//Player Non-moving Sprites
 	public static Sprite player_forward = new Sprite(32, 0, 5, SpriteSheet.tiles);
@@ -29,17 +28,17 @@ public class Sprite {
 	
 	public static Sprite player_left_1 = new Sprite(32, 3, 6, SpriteSheet.tiles);
 	public static Sprite player_left_2 = new Sprite(32, 3, 7, SpriteSheet.tiles);
-	
+
 	public static Sprite player_right_1 = new Sprite(32, 1, 6, SpriteSheet.tiles);
 	public static Sprite player_right_2 = new Sprite(32, 1, 7, SpriteSheet.tiles);
 
 	//Door Sprites
 	public static Sprite topDoorLeft = new Sprite(16, 1, 0, SpriteSheet.doors);
 	public static Sprite topDoorRight = new Sprite(16, 2, 0, SpriteSheet.doors);
-	
+
 	public static Sprite bottomDoorLeft = new Sprite(16, 1, 1, SpriteSheet.doors);
 	public static Sprite bottomDoorRight = new Sprite(16, 2, 1, SpriteSheet.doors);
-	
+
 	public static Sprite leftDoorTop = new Sprite(16, 0, 0, SpriteSheet.doors);
 	public static Sprite leftDoorBottom = new Sprite(16, 0, 1, SpriteSheet.doors);
 
@@ -48,7 +47,7 @@ public class Sprite {
 
 	//Void Sprite
 	public static Sprite voidSprite = new Sprite(16, 0x1B87E0);
-	
+
 	public Sprite(int size, int x, int y, SpriteSheet sheet) {
 		this.SIZE = size;
 		pixels = new int[size * size];
@@ -77,7 +76,6 @@ public class Sprite {
 		for (int i = 0; i < SIZE * SIZE; i++) {
 			pixels[i] = colour;
 		}
-
 	}
 
 	private void load() {

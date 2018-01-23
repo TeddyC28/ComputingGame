@@ -1,6 +1,5 @@
 package com.teddyc28.game.graphics;
 
-import com.teddyc28.game.Game;
 import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.level.room.tile.Tile;
 
@@ -39,10 +38,6 @@ public class Screen {
 				tiles[x + y * ROOM_WIDTH].render(x, y, this);
 			}
 		}
-	}
-
-	private int tileCoordinate(int x, int y) {
-		return (x / 16) + (y / 16) * ROOM_WIDTH;
 	}
 
 	public void renderPlayer(int xPos, int yPos, Sprite sprite) {

@@ -7,7 +7,6 @@ import com.teddyc28.game.input.Keyboard;
 public class Player extends Mob {
 		
 	private Keyboard input;
-	//private Sprite sprite;
 	private int anim = 0;
 	private boolean walking = false;
 	
