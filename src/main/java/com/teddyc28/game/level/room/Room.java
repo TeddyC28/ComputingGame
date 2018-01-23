@@ -1,10 +1,15 @@
 package com.teddyc28.game.level.room;
 
+import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import com.teddyc28.game.entity.Entity;
+import com.teddyc28.game.entity.particle.Particle;
+import com.teddyc28.game.entity.projectile.Projectile;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.level.room.tile.Tile;
 
@@ -12,6 +17,10 @@ public class Room {
 
     protected int[] tiles;
 
+    public List<Entity> entities = new ArrayList<Entity>();
+    public List<Projectile> projectiles = new ArrayList<Projectile>();
+    public List<Particle> particles = new ArrayList<Particle>();
+    
     public static Room spawnRoom = new Room("/textures/rooms/spawn_room.png");
     
     public static Room topLeftCornerRoom = new Room("/textures/rooms/top_left_room.png");
@@ -37,13 +46,9 @@ public class Room {
             tiles[i] = 0xff000074;
         }
     }
-    
-    protected void generateRoom() {
-        for (int y = 0; y < Screen.ROOM_HEIGHT; y++) {
-            for (int x = 0; x < Screen.ROOM_WIDTH; x++) {
-                getTile(x, y);  
-            }
-        }
+
+    public List<Projectile> getProjectiles() {
+        return projectiles;
     }
 
     protected void loadRoom(String path) {
@@ -57,11 +62,73 @@ public class Room {
         }
     }
 
+    public void update() {
+		for (int i = 0; i < entities.size(); i++) {
+            entities.get(i).update();
+        }
+
+        for (int i = 0; i < projectiles.size(); i++) {
+            projectiles.get(i).update();
+        }
+
+        for (int i = 0; i < particles.size(); i++) {
+            particles.get(i).update();
+        }
+
+        remove();
+    }
+    
+    private void remove() {
+		for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).isRemoved()) entities.remove(i);
+        }
+
+        for (int i = 0; i < projectiles.size(); i++) {
+            if (projectiles.get(i).isRemoved()) projectiles.remove(i);
+        }
+
+        for (int i = 0; i < particles.size(); i++) {
+            if (particles.get(i).isRemoved()) particles.remove(i);
+        }
+    }
+    
+    public boolean tileCollision(double x, double y, double xa, double ya, int size) {
+		boolean solid = false;
+		for (int c = 0; c < 4; c++) {
+			int xt = (((int) x + (int) xa) + c % 2 * size * 2 - 12 /*10 - 7*/) / 16;
+			int yt = (((int) y + (int) ya) + c / 2 * size + 2 /*15*/) / 16;
+			if (getTile( xt, yt).solid()) solid = true;
+		}
+		return solid;
+	}
+
     public void render(Screen screen) {
         for (int y = 0; y < Screen.ROOM_HEIGHT; y++) {
             for (int x = 0; x < Screen.ROOM_WIDTH; x++) {
-                screen.renderTile(x, y, getTile(x, y));
+                getTile(x, y).render(x, y, screen);
             }
+        }
+
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).render(screen);
+        }
+
+        for (int i = 0; i < projectiles.size(); i++) {
+			projectiles.get(i).render(screen);
+		}
+
+        for (int i = 0; i < particles.size(); i++) {
+            particles.get(i).render(screen);
+        }
+    }
+
+    public void add(Entity e) {
+        if (e instanceof Particle) {
+            particles.add((Particle) e);
+        } else if (e instanceof Projectile) {
+            projectiles.add((Projectile) e);
+        } else {
+            entities.add(e);
         }
     }
 

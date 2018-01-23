@@ -1,25 +1,30 @@
 package com.teddyc28.game;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
 import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
+import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.input.Keyboard;
+import com.teddyc28.game.input.Mouse;
 import com.teddyc28.game.level.Level;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 
-	private int width = 512;
-	private int height = 288;
-	private int scale = 3;
+	private static int width = 512;
+	private static int height = 288;
+	private static int scale = 3;
 	public static String title = "Game";
 
 	private boolean running = false;
@@ -42,16 +47,20 @@ public class Game extends Canvas implements Runnable {
 		frame = new JFrame();
 		key = new Keyboard();
 		player = new Player(key);
-		player.level = level;
+		player.initLevel(level);
+		player.initRoom(10, 10);
 
+		Mouse mouse = new Mouse();
 		addKeyListener(key);
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
 	}
 
-	public int getWindowWidth() {
+	public static int getWindowWidth() {
 		return width * scale;
 	}
 
-	public int getWindowHeight() {
+	public static int getWindowHeight() {
 		return height * scale;
 	}
 
@@ -103,6 +112,7 @@ public class Game extends Canvas implements Runnable {
 	private void update() {
 		key.update();
 		player.update();
+		level.rooms[player.getRoomX() + player.getRoomY() * level.width].update();
 	}
 
 	private void render() {
@@ -113,7 +123,7 @@ public class Game extends Canvas implements Runnable {
 		}
 
 		screen.clear();
-		level.getRoom(player.roomX, player.roomY).render(screen);
+		level.rooms[player.getRoomX() + player.getRoomY() * level.width].render(screen);
 		player.render(screen);
 
 		for (int i = 0; i < pixels.length; i++) {
@@ -122,6 +132,10 @@ public class Game extends Canvas implements Runnable {
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+		//g.setColor(Color.WHITE);
+		//g.setFont(new Font("Verdana", 0, 50));
+		//g.fillRect(Mouse.getX() - 32, Mouse.getY() - 32, 64, 64);
+		//if (Mouse.getButton() != -1) g.drawString("Button: " + Mouse.getButton(), 80, 80);
 		g.dispose();
 		bs.show();
 	}

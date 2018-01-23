@@ -7,7 +7,7 @@ import com.teddyc28.game.level.room.tile.door_tiles.*;
 
 public class Tile 
 {
-    public Sprite sprite;
+    private Sprite sprite;
 
     public static Tile floor = new FloorTile(Sprite.floor);
     public static Tile wallEdge = new WallEdgeTile(Sprite.wallEdge);
@@ -25,6 +25,14 @@ public class Tile
     
     public Tile(Sprite sprite) {
         this.sprite = sprite;
+    }
+
+    public Sprite getSprite() {
+        return sprite;
+    }
+    
+    public int getSpriteSize() {
+        return sprite.SIZE;
     }
 
     public void render(int x, int y, Screen screen) {

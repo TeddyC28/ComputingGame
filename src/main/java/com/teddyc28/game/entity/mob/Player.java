@@ -1,23 +1,35 @@
 package com.teddyc28.game.entity.mob;
 
+import com.teddyc28.game.entity.projectile.BallProjectile;
+import com.teddyc28.game.entity.projectile.Projectile;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.input.Keyboard;
+import com.teddyc28.game.input.Mouse;
 
 public class Player extends Mob {
 		
 	private Keyboard input;
 	private int anim = 0;
 	private boolean walking = false;
+
+	private int fireRate  = 0;
 	
 	public Player(Keyboard input) {
 		this.input = input;
-		this.x = 200;
-		this.y = 200;
-		this.roomX = 10;
-		this.roomY = 10;
+		this.x = 256;
+		this.y = 144;
+		this.fireRate = BallProjectile.FIRE_RATE;
 	}
 	
+	public int getRoomX() {
+		return roomX;
+	}	
+
+	public int getRoomY() {
+		return roomY;
+	}
+
 	public void update() {
 		int xa = 0, ya = 0; //variables for handling movement on the axis
 		if (anim < 7500) anim ++;
@@ -31,10 +43,32 @@ public class Player extends Mob {
 			move(xa, ya);
 		} else {
 			walking = false;
-			//dir = -1;
+		}
+		if (fireRate > 0) fireRate--;
+		if (fireRate <= 0) updateShooting();
+		updateProjectiles();
+	}
+
+	private void updateProjectiles() {
+		for (int i = 0; i < level.rooms[roomX + roomY * Screen.ROOM_WIDTH].getProjectiles().size(); i++) {
+			Projectile p = level.rooms[roomX + roomY * Screen.ROOM_WIDTH].getProjectiles().get(i);
+			
+			if (p.isRemoved()) level.rooms[roomX + roomY * Screen.ROOM_WIDTH].getProjectiles().remove(i);
 		}
 	}
 	
+	private void updateShooting() {
+		if (Mouse.getButton() == 1) {
+			double dir = Math.atan2((Mouse.getY() / 3) - y, (Mouse.getX() / 3) - x);
+			shoot(x, y, dir);
+		}
+		else if (input.su) shoot(x, y, -(Math.PI / 2));
+		else if (input.sr) shoot(x, y, 0);
+		else if (input.sd) shoot(x, y, (Math.PI / 2));
+		else if (input.sl) shoot(x, y, Math.PI);
+		fireRate = BallProjectile.FIRE_RATE;
+	}
+
 	public void render(Screen screen) {
 		if (dir == 0) {
 			sprite = Sprite.player_forward;
@@ -84,7 +118,7 @@ public class Player extends Mob {
 			}
 		}
 		
-		screen.renderPlayer(x - 16, y - 16, sprite);
+		screen.renderMob(x - 16, y - 16, this);
 	}
 
 }

@@ -15,6 +15,7 @@ public class SpriteSheet {
 	public static SpriteSheet floors = new SpriteSheet("/textures/sheets/floors.png", 48, 48);
 	public static SpriteSheet walls = new SpriteSheet("/textures/sheets/walls.png", 48, 48);
 	public static SpriteSheet doors = new SpriteSheet("/textures/sheets/doors.png", 64, 32);
+	public static SpriteSheet projectiles = new SpriteSheet("/textures/sheets/projectiles.png", 48, 48);
 			
 	public SpriteSheet(String path, int width, int height) {
 		this.WIDTH = width;
