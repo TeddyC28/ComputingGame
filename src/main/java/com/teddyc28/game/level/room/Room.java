@@ -17,14 +17,14 @@ public class Room {
 
     protected int[] tiles;
 
-    public List<Entity> entities = new ArrayList<Entity>();
-    public List<Projectile> projectiles = new ArrayList<Projectile>();
-    public List<Particle> particles = new ArrayList<Particle>();
+    public List<Entity> entities;
+    public List<Projectile> projectiles;
+    public List<Particle> particles;
     
     public static Room spawnRoom = new Room("/textures/rooms/spawn_room.png");
     
     public static Room topLeftCornerRoom = new Room("/textures/rooms/top_left_room.png");
-    public static Room topRighttCornerRoom = new Room("/textures/rooms/top_right_room.png");
+    public static Room topRightCornerRoom = new Room("/textures/rooms/top_right_room.png");
     public static Room bottomLeftCornerRoom = new Room("/textures/rooms/bottom_left_room.png");
     public static Room bottomRightCornerRoom = new Room("/textures/rooms/bottom_right_room.png");
 
@@ -33,22 +33,36 @@ public class Room {
     public static Room topEdgeRoom = new Room("/textures/rooms/top_edge_room.png");
     public static Room bottomEdgeRoom = new Room("/textures/rooms/bottom_edge_room.png");
 
-    public static Room voidRoom = new Room();
+    public static Room voidRoom = new Room(null);
 
     public Room(String path) {
         tiles = new int[Screen.ROOM_WIDTH * Screen.ROOM_HEIGHT];
-        loadRoom(path);
-    }
-
-    public Room() {
-        tiles = new int[Screen.ROOM_WIDTH * Screen.ROOM_HEIGHT];
-        for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = 0xff000074;
+        this.entities = new ArrayList<Entity>();
+        this.projectiles = new ArrayList<Projectile>();
+        this.particles = new ArrayList<Particle>();
+        if (path != null) loadRoom(path);
+        else {
+            for (int i = 0; i < tiles.length; i++) {
+                tiles[i] = 0xff000074;
+            }
         }
     }
 
+    //public Room() {
+      //  tiles = new int[Screen.ROOM_WIDTH * Screen.ROOM_HEIGHT];
+        //this.entities = new ArrayList<Entity>();
+        //this.projectiles = new ArrayList<Projectile>();
+        //this.particles = new ArrayList<Particle>();
+    //}
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
     public List<Projectile> getProjectiles() {
         return projectiles;
+    }
+    public List<Particle> getParticles() {
+        return particles;
     }
 
     protected void loadRoom(String path) {

@@ -34,7 +34,7 @@ public class Level {
     private void generateLevel() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                rooms[x + y * Screen.ROOM_HEIGHT] = getRoom(x, y);
+                rooms[x + y * Screen.ROOM_HEIGHT] = new Room(getRoom(x, y));
             }
         }
     }
@@ -52,18 +52,18 @@ public class Level {
         }
     }
     
-    private Room getRoom(int x, int y) {
-        if (x < 0 || y < 0 || x >= width || y >= height) return Room.voidRoom;
-        if (roomsImg[x + y * width] == 0xffFF0800) return Room.topLeftCornerRoom;
-        if (roomsImg[x + y * width] == 0xff000000) return Room.topRighttCornerRoom;
-        if (roomsImg[x + y * width] == 0xff4F3FFF) return Room.bottomLeftCornerRoom;
-        if (roomsImg[x + y * width] == 0xff8ED2FF) return Room.bottomRightCornerRoom;
-        if (roomsImg[x + y * width] == 0xff5EFFF9) return Room.leftEdgeRoom;
-        if (roomsImg[x + y * width] == 0xffFFAF4F) return Room.rightEdgeRoom;
-        if (roomsImg[x + y * width] == 0xff47FFB2) return Room.topEdgeRoom;
-        if (roomsImg[x + y * width] == 0xffD0FF4F) return Room.bottomEdgeRoom;
-        if (roomsImg[x + y * width] == 0xff3CFF35) return Room.spawnRoom;
-        return Room.voidRoom;
+    private String getRoom(int x, int y) {
+        if (x < 0 || y < 0 || x >= width || y >= height) return null;
+        if (roomsImg[x + y * width] == 0xffFF0800) return "/textures/rooms/top_left_room.png";
+        if (roomsImg[x + y * width] == 0xff000000) return "/textures/rooms/top_right_room.png";
+        if (roomsImg[x + y * width] == 0xff4F3FFF) return "/textures/rooms/bottom_left_room.png";
+        if (roomsImg[x + y * width] == 0xff8ED2FF) return "/textures/rooms/bottom_right_room.png";
+        if (roomsImg[x + y * width] == 0xff5EFFF9) return "/textures/rooms/left_edge_room.png";
+        if (roomsImg[x + y * width] == 0xffFFAF4F) return "/textures/rooms/right_edge_room.png";
+        if (roomsImg[x + y * width] == 0xff47FFB2) return "/textures/rooms/top_edge_room.png";
+        if (roomsImg[x + y * width] == 0xffD0FF4F) return "/textures/rooms/bottom_edge_room.png";
+        if (roomsImg[x + y * width] == 0xff3CFF35) return "/textures/rooms/spawn_room.png";
+        return null;
     }
 
 }

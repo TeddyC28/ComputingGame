@@ -11,7 +11,7 @@ import java.awt.image.DataBufferInt;
 import java.util.Random;
 
 import javax.swing.JFrame;
-
+import com.teddyc28.game.entity.mob.Dummy;
 import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.graphics.Sprite;
@@ -49,6 +49,7 @@ public class Game extends Canvas implements Runnable {
 		player = new Player(key);
 		player.initLevel(level);
 		player.initRoom(10, 10);
+		level.rooms[player.getRoomX() + player.getRoomY() * level.width].add(new Dummy(5, 5, level, player.getRoomX(), player.getRoomY()));
 
 		Mouse mouse = new Mouse();
 		addKeyListener(key);

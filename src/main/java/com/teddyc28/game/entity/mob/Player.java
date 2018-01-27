@@ -40,7 +40,7 @@ public class Player extends Mob {
 		if (input.right) xa++;
 		if (xa != 0 || ya != 0) { //if the player is moving
 			walking = true;
-			move(xa, ya);
+			move(xa, ya, true);
 		} else {
 			walking = false;
 		}
@@ -50,10 +50,10 @@ public class Player extends Mob {
 	}
 
 	private void updateProjectiles() {
-		for (int i = 0; i < level.rooms[roomX + roomY * Screen.ROOM_WIDTH].getProjectiles().size(); i++) {
-			Projectile p = level.rooms[roomX + roomY * Screen.ROOM_WIDTH].getProjectiles().get(i);
+		for (int i = 0; i < level.rooms[roomX + roomY * level.width].getProjectiles().size(); i++) {
+			Projectile p = level.rooms[roomX + roomY * level.width].getProjectiles().get(i);
 			
-			if (p.isRemoved()) level.rooms[roomX + roomY * Screen.ROOM_WIDTH].getProjectiles().remove(i);
+			if (p.isRemoved()) level.rooms[roomX + roomY * level.width].getProjectiles().remove(i);
 		}
 	}
 	
