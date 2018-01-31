@@ -1,27 +1,58 @@
 package com.teddyc28.game.entity.mob;
 
+import java.util.ArrayList;
+import java.util.List;
+import com.teddyc28.game.entity.Entity;
 import com.teddyc28.game.entity.projectile.BallProjectile;
 import com.teddyc28.game.entity.projectile.Projectile;
+import com.teddyc28.game.graphics.AnimatedSprite;
 import com.teddyc28.game.graphics.Screen;
 import com.teddyc28.game.graphics.Sprite;
+import com.teddyc28.game.graphics.SpriteSheet;
 import com.teddyc28.game.input.Keyboard;
 import com.teddyc28.game.input.Mouse;
 
 public class Player extends Mob {
 		
 	private Keyboard input;
-	private int anim = 0;
-	private boolean walking = false;
-
-	private int fireRate  = 0;
+	
+	private boolean allowDoorMove = false;
+	private boolean shooting = false;
+	
+	
+	private AnimatedSprite up = new AnimatedSprite(32, SpriteSheet.player_up, 3);
+	private AnimatedSprite down = new AnimatedSprite(32, SpriteSheet.player_down, 3);
+	private AnimatedSprite left = new AnimatedSprite(32, SpriteSheet.player_left, 3);
+	private AnimatedSprite right = new AnimatedSprite(32, SpriteSheet.player_right, 3);
+	private AnimatedSprite animSprite = down;
+	
+	private int score = 0;
 	
 	public Player(Keyboard input) {
 		this.input = input;
-		this.x = 256;
-		this.y = 144;
+		this.x = 256; 
+		this.y = 144; 
+		this.sprite = Sprite.player_back;
 		this.fireRate = BallProjectile.FIRE_RATE;
+		this.speed = 2;
 	}
 	
+	public boolean getAllowDoors() {
+		return allowDoorMove;
+	}
+	
+	public void setAllowDoors(boolean allowDoorMove) {
+		this.allowDoorMove = allowDoorMove;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void setScore(int score) {
+		this.score = score;
+	}
+
 	public int getRoomX() {
 		return roomX;
 	}	
@@ -31,94 +62,66 @@ public class Player extends Mob {
 	}
 
 	public void update() {
-		int xa = 0, ya = 0; //variables for handling movement on the axis
-		if (anim < 7500) anim ++;
-		else anim = 0;
-		if (input.up) ya--;
-		if (input.down) ya++;
-		if (input.left) xa--;
-		if (input.right) xa++;
-		if (xa != 0 || ya != 0) { //if the player is moving
+		if (fireRate > 0) fireRate--;
+		if (walking) animSprite.update();
+		else animSprite.setFrame(0);
+		double xa = 0, ya = 0;
+		if (input.up) {
+			animSprite = up;
+			ya -= speed;
+			dir = Direction.UP;
+		} else if (input.down) {
+			animSprite = down;
+			ya += speed;
+			dir = Direction.DOWN;
+		}
+		if (input.left) {
+			animSprite = left;
+			xa -= speed;
+			dir = Direction.LEFT;
+		} else if (input.right) {
+			animSprite = right;
+			xa += speed;
+			dir = Direction.RIGHT;
+		}
+		if (xa != 0 || ya != 0) {
+			move(xa, ya, allowDoorMove);
 			walking = true;
-			move(xa, ya, true);
 		} else {
 			walking = false;
 		}
-		if (fireRate > 0) fireRate--;
-		if (fireRate <= 0) updateShooting();
+
+		if (input.su || input.sd || input.sl || input.sr || Mouse.getButton() == 1) shooting = true;
+		else shooting = false;
+		updateShooting();
 		updateProjectiles();
+        if (level.rooms[roomX + roomY * level.width].getEntities().size() == 0) {
+            allowDoorMove = true;
+		}
 	}
 
-	private void updateProjectiles() {
-		for (int i = 0; i < level.rooms[roomX + roomY * level.width].getProjectiles().size(); i++) {
-			Projectile p = level.rooms[roomX + roomY * level.width].getProjectiles().get(i);
-			
-			if (p.isRemoved()) level.rooms[roomX + roomY * level.width].getProjectiles().remove(i);
+
+	protected void updateShooting() {
+		if (!shooting || fireRate > 0) return;
+		List<Mob> targets = new ArrayList<Mob>();
+		List<Entity> temp = level.rooms[roomX + roomY * level.width].getEntities();
+		for (int i = 0; i < temp.size(); i++) {
+			if (temp.get(i) instanceof Dummy || temp.get(i) instanceof Chaser || temp.get(i) instanceof Follower || temp.get(i) instanceof Shooter) {
+				targets.add((Mob) temp.get(i));
+			}
 		}
-	}
-	
-	private void updateShooting() {
-		if (Mouse.getButton() == 1) {
-			double dir = Math.atan2((Mouse.getY() / 3) - y, (Mouse.getX() / 3) - x);
-			shoot(x, y, dir);
-		}
-		else if (input.su) shoot(x, y, -(Math.PI / 2));
-		else if (input.sr) shoot(x, y, 0);
-		else if (input.sd) shoot(x, y, (Math.PI / 2));
-		else if (input.sl) shoot(x, y, Math.PI);
+		double dir = Math.atan2((Mouse.getY() / 3) - y, (Mouse.getX() / 3) - x);
+		shoot(x, y, dir, targets);
+		if (input.su) shoot(x, y, -(Math.PI / 2), targets);
+		else if (input.sr) shoot(x, y, 0, targets);
+		else if (input.sd) shoot(x, y, (Math.PI / 2), targets);
+		else if (input.sl) shoot(x, y, Math.PI, targets);
 		fireRate = BallProjectile.FIRE_RATE;
 	}
 
 	public void render(Screen screen) {
-		if (dir == 0) {
-			sprite = Sprite.player_forward;
-
-			if (walking) {
-				if (anim % 20 > 10) {
-					sprite = Sprite.player_forward_1;
-				} else {
-					sprite = Sprite.player_forward_2;
-				}
-			}
-		}
-
-		if (dir == 1) {
-			sprite = Sprite.player_right;
-
-			if (walking) {
-				if (anim % 20 > 10) {
-					sprite = Sprite.player_right_1;
-				} else {
-					sprite = Sprite.player_right_2;
-				}
-			}
-		}
-
-		if (dir == 2) {
-			sprite = Sprite.player_back;
-
-			if (walking) {
-				if (anim % 20 > 10) {
-					sprite = Sprite.player_back_1;
-				} else {
-					sprite = Sprite.player_back_2;
-				}
-			}
-		}
-
-		if (dir == 3) {
-			sprite = Sprite.player_left;
-
-			if (walking){
-				if (anim % 20 > 10) {
-					sprite = Sprite.player_left_1;
-				} else {
-					sprite = Sprite.player_left_2;
-				}
-			}
-		}
-		
-		screen.renderMob(x - 16, y - 16, this);
+		screen.renderMob((int) (x - 16), (int) (y - 16), animSprite.getSprite());
 	}
+	
 
 }

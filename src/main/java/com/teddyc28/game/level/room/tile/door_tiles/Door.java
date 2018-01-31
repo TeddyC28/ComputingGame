@@ -13,4 +13,8 @@ public class Door extends Tile {
         return false;
     }
 
+    public boolean solid() {
+        return true;
+    }
+
 }

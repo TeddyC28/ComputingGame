@@ -20,7 +20,6 @@ public class Keyboard implements KeyListener {
 		sr = keys[KeyEvent.VK_RIGHT];
 		
 		for (int i = 0; i < keys.length; i++) {
-			//if (keys[i]) System.out.println("Key: " + i);
 		}
 	}
 	

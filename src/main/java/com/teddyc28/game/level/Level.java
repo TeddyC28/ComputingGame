@@ -2,10 +2,14 @@ package com.teddyc28.game.level;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import com.teddyc28.game.graphics.Screen;
+import com.teddyc28.game.entity.mob.Chaser;
+import com.teddyc28.game.entity.mob.Dummy;
+import com.teddyc28.game.entity.mob.Follower;
+import com.teddyc28.game.entity.mob.Shooter;
 import com.teddyc28.game.level.room.Room;
 
 public class Level {
@@ -32,9 +36,32 @@ public class Level {
     }
 
     private void generateLevel() {
+        Random random = new Random();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                rooms[x + y * Screen.ROOM_HEIGHT] = new Room(getRoom(x, y));
+                rooms[x + y * width] = new Room(getRoom(x, y));
+                for (int i = 0; i < random.nextInt(5); i++) {
+                    int rx = 16 + 8 * (random.nextInt(3) - 1);
+                    int ry = 9 + 5 * (random.nextInt(3) - 1);
+                    if (random.nextInt(2) == 0) {
+                        rooms[x + y * width].add(new Shooter(rx, ry, this, x, y));
+                    }
+                    else if (random.nextInt(3) == 0) {
+                        rooms[x + y * width].add(new Chaser(rx, ry, this, x, y));
+                    }
+                    else if (random.nextInt(3) == 0) {
+                        rooms[x + y * width].add(new Follower(rx, ry, this, x, y));
+                    }
+                    else {
+                        rooms[x + y * width].add(new Dummy(rx, ry, this, x, y));
+                    }
+                }
+                int tx = 5;
+                int ty = 5;
+                rooms[x + y * width].entities.add(new Shooter(tx, ty, this, x, y));
+                for (int i = 0; i < 5; i++) {
+                    //rooms[x + y * width].entities.add(new Dummy(tx, ty, this, x, y));
+                }
             }
         }
     }

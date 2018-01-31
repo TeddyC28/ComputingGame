@@ -1,20 +1,20 @@
 package com.teddyc28.game;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.Random;
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import javax.swing.JFrame;
-import com.teddyc28.game.entity.mob.Dummy;
 import com.teddyc28.game.entity.mob.Player;
 import com.teddyc28.game.graphics.Screen;
-import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.input.Keyboard;
 import com.teddyc28.game.input.Mouse;
 import com.teddyc28.game.level.Level;
@@ -49,7 +49,8 @@ public class Game extends Canvas implements Runnable {
 		player = new Player(key);
 		player.initLevel(level);
 		player.initRoom(10, 10);
-		level.rooms[player.getRoomX() + player.getRoomY() * level.width].add(new Dummy(5, 5, level, player.getRoomX(), player.getRoomY()));
+		level.rooms[player.getRoomX() + player.getRoomY() * level.width].setPlayer(player);
+//		level.rooms[player.getRoomX() + player.getRoomY() * level.width].add(new Dummy(5, 5, level, player.getRoomX(), player.getRoomY()));
 
 		Mouse mouse = new Mouse();
 		addKeyListener(key);
@@ -86,7 +87,6 @@ public class Game extends Canvas implements Runnable {
 		final double ns = 1000000000.0 / 60.0;
 		double delta = 0;
 		int frames = 0;
-		int updates = 0;
 		requestFocus();
 		while (running) {
 			long now = System.nanoTime();
@@ -94,7 +94,6 @@ public class Game extends Canvas implements Runnable {
 			lastTime = now;
 			while (delta >= 1) {
 				update();
-				updates++;
 				delta--;
 			}
 			render();
@@ -102,8 +101,7 @@ public class Game extends Canvas implements Runnable {
 
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				frame.setTitle(title + " | " + updates + " ups, " + frames + " fps");
-				updates = 0;
+				frame.setTitle(title + " | " + frames + " fps");
 				frames = 0;
 			}
 		}
@@ -114,6 +112,10 @@ public class Game extends Canvas implements Runnable {
 		key.update();
 		player.update();
 		level.rooms[player.getRoomX() + player.getRoomY() * level.width].update();
+		if (player.getHealth() <= 9) {
+			gameOver();
+			System.exit(0);
+		}
 	}
 
 	private void render() {
@@ -125,7 +127,6 @@ public class Game extends Canvas implements Runnable {
 
 		screen.clear();
 		level.rooms[player.getRoomX() + player.getRoomY() * level.width].render(screen);
-		player.render(screen);
 
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = screen.pixels[i];
@@ -139,6 +140,18 @@ public class Game extends Canvas implements Runnable {
 		//if (Mouse.getButton() != -1) g.drawString("Button: " + Mouse.getButton(), 80, 80);
 		g.dispose();
 		bs.show();
+	}
+
+	public void gameOver() {
+		File target = new File(System.getProperty("user.dir"));
+		File main = new File(target.getParent() + File.separator + "Score.txt");
+		try {
+			PrintWriter pw = new PrintWriter(main);
+			pw.println("Score: " + player.getScore());
+			pw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

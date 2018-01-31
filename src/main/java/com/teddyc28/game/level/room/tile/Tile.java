@@ -32,7 +32,7 @@ public class Tile
     }
     
     public int getSpriteSize() {
-        return sprite.SIZE;
+        return sprite.getSize();
     }
 
     public void render(int x, int y, Screen screen) {

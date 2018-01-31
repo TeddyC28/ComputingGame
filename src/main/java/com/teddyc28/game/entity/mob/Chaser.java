@@ -6,39 +6,48 @@ import com.teddyc28.game.graphics.Sprite;
 import com.teddyc28.game.graphics.SpriteSheet;
 import com.teddyc28.game.level.Level;
 
-public class Dummy extends Mob {
+public class Chaser extends Mob {
 
-    private int xa = 0, ya = 0;
-
-    private int time = 0;
-    
     private AnimatedSprite up = new AnimatedSprite(32, SpriteSheet.dummy_up, 3);
 	private AnimatedSprite down = new AnimatedSprite(32, SpriteSheet.dummy_down, 3);
 	private AnimatedSprite left = new AnimatedSprite(32, SpriteSheet.dummy_left, 3);
 	private AnimatedSprite right = new AnimatedSprite(32, SpriteSheet.dummy_right, 3);
     private AnimatedSprite animSprite = down;
-    
-    public Dummy(int x, int y, Level level, int rx, int ry) {
+
+    private Player target;
+
+    private double xa = 0, ya = 0;
+    private double speed = 0.8;
+
+    public Chaser(int x, int y, Level level, int rx, int ry) {
         this.x = x << 4;
         this.y = y << 4;
         this.sprite = Sprite.dummy;
         initLevel(level);
         initRoom(rx, ry);
-        this.rateOfFire = 50;
     }
     
-    public void update() {
-        checkDead();
-        time++;
-        if (fireRate > 0) fireRate--;
-        if (time % (random.nextInt(50) + 30) == 0) {
-            xa = random.nextInt(3) - 1;
-            ya = random.nextInt(3) - 1;
-            if (random.nextInt(5) == 0) {
-                xa = 0;
-                ya = 0;
-            }
+    private void move() {
+        xa = 0;
+        ya = 0;
+        target = level.rooms[roomX + roomY * level.width].getPlayer();
+        if (!(level.rooms[roomX + roomY * level.width].getEntities(target, 30).size() > 0)) {
+            if ((int) x < (int) target.getX()) xa += speed;
+            if ((int) x > (int) target.getX()) xa -= speed;
+            if ((int) y < (int) target.getY()) ya += speed;
+            if ((int) y > (int) target.getY()) ya -= speed;
         }
+		if (xa != 0 || ya != 0) {
+			move(xa, ya, false);
+			walking = true;
+		} else {
+			walking = false;
+		}
+    }
+
+	public void update() {
+        checkDead();
+        move();
         if (walking) animSprite.update();
         else animSprite.setFrame(0);
         if (ya < 0) {
@@ -54,22 +63,12 @@ public class Dummy extends Mob {
 		} else if (xa > 0) {
 			animSprite = right;
             dir = Direction.RIGHT;
-        }
-
-		if (xa != 0 || ya != 0) {
-			move(xa, ya, false);
-			walking = true;
-		} else {
-			walking = false;
-        }
-        
-
-		updateShooting();
-		
-		updateProjectiles();
+        }   
     }
-    
-    public void render(Screen screen) {
-        screen.renderMob((int) (x - 16), (int) (y - 16), animSprite.getSprite());
-    }
+
+	public void render(Screen screen) {
+        sprite = animSprite.getSprite();
+		screen.renderMob((int) (x - 16), (int) (y - 16), this);
+	}
+
 }

@@ -1,6 +1,9 @@
 package com.teddyc28.game.graphics;
 
+import com.teddyc28.game.entity.mob.Chaser;
+import com.teddyc28.game.entity.mob.Follower;
 import com.teddyc28.game.entity.mob.Mob;
+import com.teddyc28.game.entity.mob.Shooter;
 import com.teddyc28.game.entity.projectile.Projectile;
 import com.teddyc28.game.level.room.tile.Tile;
 
@@ -42,52 +45,58 @@ public class Screen {
 	}
 
 	public void renderSprite(int xPos, int yPos, Sprite sprite) {
-		for (int y = 0; y < sprite.getHeight(); y++) {
-			for (int x = 0; x < sprite.getWidth(); x++) {
+		for (int y = 0; y < sprite.getSize(); y++) {
+			for (int x = 0; x < sprite.getSize(); x++) {
 				if ((x + xPos) < 0 || (x + xPos) >= width || (y + yPos) < 0 || (y + yPos) >= height) break;
-				if (visible(sprite.pixels[x + y * sprite.getWidth()])) {
-					pixels[(x + xPos) + (y + yPos) * width] = sprite.pixels[x + y * sprite.getWidth()];
-				}
+				int col = sprite.pixels[x + y * sprite.getSize()];
+				if (col != 0xffff00ff) pixels[(xPos + x) + (yPos + y) * width] = col;
+			}
+		}
+	}
+
+	public void renderMob(int xPos, int yPos, Sprite sprite) {
+		for (int y = 0; y < sprite.getSize(); y++) {
+			for (int x = 0; x < sprite.getSize(); x++) {
+				if ((x + xPos) < -sprite.getSize() || (x + xPos) >= width || (y + yPos) < 0 || (y + yPos) >= height) break;
+				int col = sprite.pixels[x + y * sprite.getSize()];
+				if (col != 0xffff00ff) pixels[(xPos + x) + (yPos + y) * width] = col;
 			}
 		}
 	}
 
 	public void renderMob(int xPos, int yPos, Mob mob) {
-		for (int y = 0; y < mob.getSpriteSize(); y++) {
-			for (int x = 0; x < mob.getSpriteSize(); x++) {
-				if ((x + xPos) < -mob.getSpriteSize() || (x + xPos) >= width || (y + yPos) < 0 || (y + yPos) >= height) break;
-				if (visible(mob.getSprite().pixels[x + y * mob.getSpriteSize()])) {
-					pixels[(xPos + x) + (yPos + y) * width] = mob.getSprite().pixels[x + y * mob.getSpriteSize()];
-				}
+		for (int y = 0; y < mob.getSprite().getSize(); y++) {
+			for (int x = 0; x < mob.getSprite().getSize(); x++) {
+				if ((x + xPos) < -mob.getSprite().getSize() || (x + xPos) >= width || (y + yPos) < 0 || (y + yPos) >= height) break;
+				int col = mob.getSprite().pixels[x + y * mob.getSprite().getSize()];
+				if ((mob instanceof Shooter) && col == 0xff472BBF) col = 0xff00FF00;
+				if ((mob instanceof Chaser) && col == 0xff472BBF) col = 0xffBA0015;
+				if ((mob instanceof Follower) && col == 0xff472BBF) col = 0xff000000;
+				if (col != 0xffff00ff) pixels[(xPos + x) + (yPos + y) * width] = col;
 			}
 		}
 	}
 
 	public void renderTile(int xPos, int yPos, Tile tile) {
-		for (int y = 0; y < tile.getSprite().getHeight(); y++) {
-			for (int x = 0; x < tile.getSprite().getWidth(); x++) {
-				pixels[((xPos * tile.getSprite().getWidth()) + x) + ((yPos * tile.getSprite().getHeight()) + y) * width] = tile.getSprite().pixels[(x) + (y) * tile.getSprite().getWidth()];
+		for (int y = 0; y < tile.getSprite().getSize(); y++) {
+			for (int x = 0; x < tile.getSprite().getSize(); x++) {
+				pixels[((xPos * tile.getSprite().getSize()) + x) + ((yPos * tile.getSprite().getSize()) + y) * width] = tile.getSprite().pixels[(x) + (y) * tile.getSprite().getSize()];
 			}
 		}
 	
 	}
 
 	public void renderProjectile(int xPos, int yPos, Projectile p) {
-		for (int y = 0; y < p.getSprite().getHeight(); y++) {
+		for (int y = 0; y < p.getSprite().getSize(); y++) {
 			int ya = y + yPos;
-			for (int x = 0; x < p.getSprite().getWidth(); x++) {
+			for (int x = 0; x < p.getSprite().getSize(); x++) {
 				int xa = x + xPos;
 				if (xa < -32 || xa >= width || ya < 0 || ya >= height) break;
 				if (xa < 0) xa = 0;
-				if (visible(p.getSprite().pixels[x + y * p.getSpriteSize()])) {
-					pixels[xa + ya * width] = p.getSprite().pixels[x + y * p.getSprite().getWidth()];
-				}
+				int col = p.getSprite().pixels[x + y * p.getSprite().getSize()];
+				if (col != 0xffff00ff) pixels[xa + ya * width] = col;
 			}
 		}
 	}
 
-	private boolean visible(int current) {
-		if (current == 0xffff00ff) return false;
-		return true;
-	}
 }
